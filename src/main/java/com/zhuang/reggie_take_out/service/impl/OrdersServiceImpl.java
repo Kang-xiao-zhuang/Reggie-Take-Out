@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implements OrderService {
+public class OrdersServiceImpl extends ServiceImpl<OrderMapper, Orders> implements OrdersService {
 
     @Autowired
     private ShoppingCartService shoppingCartService;
