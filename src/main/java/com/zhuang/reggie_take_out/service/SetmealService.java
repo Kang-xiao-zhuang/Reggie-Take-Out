@@ -12,9 +12,17 @@ import java.util.List;
  * author: Zhuang
  * version: 1.0
  */
-public interface SetmealService extends IService<Setmeal>{
+public interface SetmealService extends IService<Setmeal> {
 
     public void saveWithDish(SetmealDto setmealDto);
 
     public void removeWithDish(List<Long> ids);
+
+    public SetmealDto getByIdWithDishes(Long id);
+
+    public void updateWithDishes(SetmealDto setmealDto);
+
+    public void deleteWithDishes(Long id);
+
+    public void updateWithStatus(Setmeal setmeal);
 }

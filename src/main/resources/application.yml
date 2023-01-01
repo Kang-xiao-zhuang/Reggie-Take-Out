@@ -10,13 +10,16 @@ spring:
       url: jdbc:mysql://localhost:3306/reggie?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: root
       password: root
-
   redis:
     host: 192.168.18.128
     port: 6379
     #password: 123456
     database: 0
-
+  # springmvc(springboot) 默认超过 1MB就会报错
+  # 在yml文件中配置可以自定义限制文件上传大小
+  cache:
+    redis:
+      time-to-live: 1800000 #设置缓存数据的过期时间
 #  main:
 #    allow-bean-definition-overriding: true
 mybatis-plus:
