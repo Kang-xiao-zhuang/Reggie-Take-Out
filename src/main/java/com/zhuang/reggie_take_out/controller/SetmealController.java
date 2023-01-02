@@ -12,6 +12,8 @@ import com.zhuang.reggie_take_out.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -101,18 +103,70 @@ public class SetmealController {
     }
 
     /**
-     * 删除套餐
+     * 根据套餐id获取对应信息回显
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("/{id}")
+    @Cacheable(value = "setmealCache", key = "'setmeal'+#id")
+    public R<SetmealDto> get(@PathVariable long id) {
+        //查询setmeal表和套餐对应的菜品
+        SetmealDto setmealDto = setmealService.getByIdWithDishes(id);
+        return R.success(setmealDto);
+    }
+
+    /**
+     * 更新套餐数据
+     *
+     * @param setmealDto
+     * @return
+     */
+    @PutMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)
+    public R<String> update(@RequestBody SetmealDto setmealDto) {
+        //更新setmeal表和对应的setmealDish数据
+        setmealService.updateWithDishes(setmealDto);
+        return R.success("更新成功");
+    }
+
+    /**
+     * 删除套餐操作
      *
      * @param ids List<Long>
-     * @return String
+     * @return R<String>
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache", allEntries = true, beforeInvocation = false)
     public R<String> delete(@RequestParam List<Long> ids) {
-        log.info("ids:{}", ids);
+        for (Long id : ids) {
+            //删除套餐信息和关联的套餐菜品信息
+            setmealService.deleteWithDishes(id);
+        }
+        return R.success("删除成功");
+    }
 
-        setmealService.removeWithDish(ids);
-
-        return R.success("套餐数据删除成功");
+    /**
+     * 更新套餐状态
+     *
+     * @param ids
+     * @param status
+     * @return
+     */
+    @PostMapping("/status/{status}")
+    @CacheEvict(value = "setmealCache", allEntries = true)
+    public R<String> updateStatus(@RequestParam List<Long> ids, @PathVariable Integer status) {
+        for (Long id : ids) {
+            Setmeal setmeal = new Setmeal();
+            setmeal.setId(id);
+            setmeal.setStatus(status);
+            //如果当前菜品关联了套餐则不能更改状态
+            setmealService.updateWithStatus(setmeal);
+        }
+        if (status == 1) {
+            return R.success("已起售");
+        }
+        return R.success("已停售");
     }
 
     /**
@@ -122,6 +176,8 @@ public class SetmealController {
      * @return List<Setmeal>
      */
     @GetMapping("/list")
+    //@Cacheable(value = "setmealCache", key = "#setmeal.categoryId+'_'+#setmeal.status")
+    //清除setmealCache名称下,所有的缓存数据
     public R<List<Setmeal>> list(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(setmeal.getCategoryId() != null, Setmeal::getCategoryId, setmeal.getCategoryId());
