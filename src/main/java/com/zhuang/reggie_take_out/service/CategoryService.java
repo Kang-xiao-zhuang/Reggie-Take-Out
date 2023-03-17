@@ -10,4 +10,7 @@ import com.zhuang.reggie_take_out.entity.Category;
  * version: 1.0
  */
 public interface CategoryService extends IService<Category> {
+
+    //根据ID删除分类
+    public void remove(Long ids);
 }
