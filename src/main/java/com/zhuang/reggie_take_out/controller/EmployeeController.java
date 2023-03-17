@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 @RequestMapping("/employee")
 public class EmployeeController {
 
+    private static final String EMPLOYEE = "employee";
+
     @Autowired
     private EmployeeService employeeService;
 
@@ -64,7 +66,7 @@ public class EmployeeController {
         }
 
         //6、登录成功，将员工id存入Session并返回登录成功结果
-        request.getSession().setAttribute("employee", emp.getId());
+        request.getSession().setAttribute(EMPLOYEE, emp.getId());
         return R.success(emp);
 
     }
@@ -78,7 +80,7 @@ public class EmployeeController {
     @PostMapping("/logout")
     public R<String> logout(HttpServletRequest request) {
         // 清楚Session中保存的当前登录员工的id
-        request.getSession().removeAttribute("employee");
+        request.getSession().removeAttribute(EMPLOYEE);
         return R.success("退出成功");
     }
 
@@ -97,7 +99,7 @@ public class EmployeeController {
         employee.setUpdateTime(LocalDateTime.now());
 
         // 获取当前用户id
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        Long empId = (Long) request.getSession().getAttribute(EMPLOYEE);
 
         employee.setCreateUser(empId);
         employee.setUpdateUser(empId);
@@ -146,7 +148,7 @@ public class EmployeeController {
     public R<String> update(@RequestBody Employee employee, HttpServletRequest request) {
         log.info(employee.toString());
 
-        Long empId = (Long) request.getSession().getAttribute("employee");
+        Long empId = (Long) request.getSession().getAttribute(EMPLOYEE);
         employee.setUpdateTime(LocalDateTime.now());
         employee.setUpdateUser(empId);
         employeeService.updateById(employee);
