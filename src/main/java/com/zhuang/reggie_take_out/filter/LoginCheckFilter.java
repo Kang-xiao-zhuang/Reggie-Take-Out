@@ -24,6 +24,7 @@ public class LoginCheckFilter implements Filter {
     //路径匹配器，支持通配符
     public static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
 
+    private static final String EMPLOYEE = "employee";
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -42,7 +43,7 @@ public class LoginCheckFilter implements Filter {
                 "/front/**",
                 "/common/**",
                 "/user/sendMsg", // 移动端发送短信
-                "/user/login" ,// 移动端登录
+                "/user/login",// 移动端登录
                 "/doc.html",
                 "/webjars/**",
                 "/swagger-resources",
@@ -60,10 +61,10 @@ public class LoginCheckFilter implements Filter {
         }
 
         //4-1、判断登录状态，如果已登录，则直接放行
-        if (request.getSession().getAttribute("employee") != null) {
-            log.info("用户已登录，用户id为：{}", request.getSession().getAttribute("employee"));
+        if (request.getSession().getAttribute(EMPLOYEE) != null) {
+            log.info("用户已登录，用户id为：{}", request.getSession().getAttribute(EMPLOYEE));
 
-            Long empId = (Long) request.getSession().getAttribute("employee");
+            Long empId = (Long) request.getSession().getAttribute(EMPLOYEE);
             BaseContext.setCurrentId(empId);
 
             filterChain.doFilter(request, response);
@@ -84,7 +85,6 @@ public class LoginCheckFilter implements Filter {
         log.info("用户未登录");
         //5、如果未登录则返回未登录结果，通过输出流方式向客户端页面响应数据
         response.getWriter().write(JSON.toJSONString(R.error("NOTLOGIN")));
-        return;
     }
 
 
