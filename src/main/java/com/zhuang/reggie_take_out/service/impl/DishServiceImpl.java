@@ -56,7 +56,6 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
      */
     public DishDto getByIdWithFlavor(Long id) {
         //查询菜品基本信息，从dish表查询
-
         Dish dish = this.getById(id);
 
         DishDto dishDto = new DishDto();
@@ -72,6 +71,12 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         return dishDto;
     }
 
+
+    /**
+     * 更新菜品信息，同时更新对应的口味信息
+     *
+     * @param dishDto DishDto
+     */
     @Override
     @Transactional
     public void updateWithFlavor(DishDto dishDto) {
