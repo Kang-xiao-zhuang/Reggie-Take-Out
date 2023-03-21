@@ -652,7 +652,7 @@
           getDishList (id) {
             queryDishList({categoryId: id}).then(res => {
               if (res.code === 1) {
-                if (res.data.length == 0) {
+                if (res.data.length === 0) {
                   this.dishAddList = []
                   return
                 }
