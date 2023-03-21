@@ -39,7 +39,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
 
         //菜品口味
         List<DishFlavor> flavors = dishDto.getFlavors();
-        flavors = flavors.stream().map((item) -> {
+        flavors = flavors.stream().map(item -> {
             item.setDishId(dishId);
             return item;
         }).collect(Collectors.toList());
@@ -92,7 +92,7 @@ public class DishServiceImpl extends ServiceImpl<DishMapper, Dish> implements Di
         //添加当前提交过来的口味数据---dish_flavor表的insert操作
         List<DishFlavor> flavors = dishDto.getFlavors();
 
-        flavors = flavors.stream().map((item) -> {
+        flavors = flavors.stream().map(item -> {
             item.setDishId(dishDto.getId());
             return item;
         }).collect(Collectors.toList());
