@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/dish")
 @Slf4j
 public class DishController {
+    private static final String DISH_ = "dish_";
 
     @Autowired
     private DishService dishService;
@@ -61,7 +62,7 @@ public class DishController {
         //Set keys = redisTemplate.keys("dish_*");
         //redisTemplate.delete(keys);
 
-        String key = "dish_" + dishDto.getCategoryId() + "_1";
+        String key = DISH_ + dishDto.getCategoryId() + "_1";
         redisTemplate.delete(key);
 
         return R.success("新增菜品成功");
@@ -97,7 +98,7 @@ public class DishController {
 
         List<Dish> records = pageInfo.getRecords();
 
-        List<DishDto> list = records.stream().map((item) -> {
+        List<DishDto> list = records.stream().map(item -> {
             DishDto dishDto = new DishDto();
 
             BeanUtils.copyProperties(item, dishDto);
@@ -147,7 +148,7 @@ public class DishController {
         //Set keys = redisTemplate.keys("dish_*");
         //redisTemplate.delete(keys);
 
-        String key = "dish_" + dishDto.getCategoryId() + "_1";
+        String key = DISH_ + dishDto.getCategoryId() + "_1";
         redisTemplate.delete(key);
         return R.success("修改菜品成功");
     }
@@ -179,7 +180,7 @@ public class DishController {
         List<DishDto> dishDtoList = null;
 
         // 先从redis中获取缓存数据
-        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        String key = DISH_ + dish.getCategoryId() + "_" + dish.getStatus();
 
         dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
         // 如果存在，直接返回，无需查询数据库
@@ -197,7 +198,7 @@ public class DishController {
 
         List<Dish> list = dishService.list(queryWrapper);
 
-        dishDtoList = list.stream().map((item) -> {
+        dishDtoList = list.stream().map(item -> {
             DishDto dishDto = new DishDto();
 
             BeanUtils.copyProperties(item, dishDto);
@@ -227,6 +228,13 @@ public class DishController {
         return R.success(dishDtoList);
     }
 
+
+    /**
+     * 删除菜品
+     *
+     * @param ids List<Long>
+     * @return String
+     */
     @DeleteMapping
     public R<String> delete(@RequestParam List<Long> ids) {
         log.info("ids:{}", ids);

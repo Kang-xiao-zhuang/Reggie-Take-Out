@@ -116,7 +116,7 @@ public class OrdersController {
         BeanUtils.copyProperties(pageInfo, dtoPage, "records");
         //根据用户id查询到订单id
         List<Orders> list = ordersService.list(lambdaQueryWrapper);
-        List<Long> collect = list.stream().map(itm -> itm.getId()).collect(Collectors.toList());
+        List<Long> collect = list.stream().map(Orders::getId).collect(Collectors.toList());
         //根据订单id查询订单菜品信息
         LambdaQueryWrapper<OrderDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.in(OrderDetail::getOrderId, collect);
@@ -169,8 +169,8 @@ public class OrdersController {
     /**
      * 再来一单
      *
-     * @param orders
-     * @return
+     * @param orders Orders
+     * @return R<String>
      */
     @PostMapping("/again")
     @CacheEvict(value = "shoppingCache", allEntries = true)
