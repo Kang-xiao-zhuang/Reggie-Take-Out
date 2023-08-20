@@ -937,3 +937,8 @@ public R<String> delete(@RequestParam List<Long> ids) {
         }
 ```
 
+## 项目部署启动
+
+部署reids和mysql，更改`application.yml`的配置文件。
+
+启动项目里的jar包即可！
