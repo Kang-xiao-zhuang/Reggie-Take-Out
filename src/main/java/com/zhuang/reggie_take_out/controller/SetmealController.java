@@ -132,7 +132,7 @@ public class SetmealController {
     /**
      * 删除套餐操作
      *
-     * @param ids List<Long>
+     * @param ids List
      * @return R<String>
      */
     @DeleteMapping
@@ -148,9 +148,9 @@ public class SetmealController {
     /**
      * 更新套餐状态
      *
-     * @param ids
-     * @param status
-     * @return
+     * @param ids    List
+     * @param status Integer
+     * @return R
      */
     @PostMapping("/status/{status}")
     @CacheEvict(value = "setmealCache", allEntries = true)

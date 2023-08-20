@@ -103,8 +103,8 @@ public class UserController {
     /**
      * 用户退出
      *
-     * @param session
-     * @return
+     * @param session HttpSession
+     * @return R
      */
     @PostMapping("/loginout")
     public R<String> logout(HttpSession session) {
